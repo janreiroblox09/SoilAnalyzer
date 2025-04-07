@@ -4,35 +4,74 @@
   <title>ESP32 Controller</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
       padding-top: 50px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
     button {
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 20px;
-      border-radius: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
     }
   </style>
 </head>
 <body>
   <h1>Control ESP32</h1>
-  <button onclick="sendCommand('turn-on')">Turn ON</button>
-  <button onclick="sendCommand('turn-off')">Turn OFF</button>
+
+  <div>
+    <input type="text" id="ipInput" placeholder="ESP32 IP Address (e.g., 192.168.1.2)" />
+    <br>
+    <button onclick="sendCommand('turn-on')">Turn ON</button>
+    <button onclick="sendCommand('turn-off')">Turn OFF</button>
+  </div>
+
+  <div id="status">Waiting for action...</div>
 
   <script>
-    const esp32IP = "http://192.168.1.2"; // Replace with your ESP32's IP
+    function sendCommand(command) {
+      const ip = document.getElementById('ipInput').value.trim();
+      const statusDiv = document.getElementById('status');
 
-    function sendCommand(cmd) {
-      fetch(`${esp32IP}/${cmd}`)
-        .then(response => response.text())
-        .then(data => {
-          alert(`ESP32 says: ${data}`);
+      if (!ip) {
+        alert("Please enter the ESP32's IP address.");
+        return;
+      }
+
+      const url = `http://${ip}/${command}`;
+
+      statusDiv.textContent = `Sending command: ${command}...`;
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
         })
-        .catch(err => {
-          alert("Error communicating with ESP32: " + err);
+        .then(data => {
+          statusDiv.textContent = `✅ Success: ${data}`;
+        })
+        .catch(error => {
+          statusDiv.textContent = `❌ Error: ${error}`;
         });
     }
   </script>
