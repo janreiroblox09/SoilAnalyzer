@@ -23,7 +23,7 @@
   <button onclick="sendCommand('turn-off')">Turn OFF</button>
 
   <script>
-    const esp32IP = "http://192.168.1.100"; // Replace with your ESP32's IP
+    const esp32IP = "http://192.168.1.2"; // Replace with your ESP32's IP
 
     function sendCommand(cmd) {
       fetch(`${esp32IP}/${cmd}`)
