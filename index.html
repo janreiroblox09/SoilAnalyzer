@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP32 Controller</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+    button {
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Control ESP32</h1>
+  <button onclick="sendCommand('turn-on')">Turn ON</button>
+  <button onclick="sendCommand('turn-off')">Turn OFF</button>
+
+  <script>
+    const esp32IP = "http://192.168.1.100"; // Replace with your ESP32's IP
+
+    function sendCommand(cmd) {
+      fetch(`${esp32IP}/${cmd}`)
+        .then(response => response.text())
+        .then(data => {
+          alert(`ESP32 says: ${data}`);
+        })
+        .catch(err => {
+          alert("Error communicating with ESP32: " + err);
+        });
+    }
+  </script>
+</body>
+</html>
